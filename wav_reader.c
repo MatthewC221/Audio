@@ -4,7 +4,7 @@
 #include "wav.h"
 
 // A very basic wav reader, reads the header, then the data. Transfers it to a different file
-
+// (identical files)
 
 int main(int argc, char *argv[])
 {
@@ -17,11 +17,11 @@ int main(int argc, char *argv[])
         FILE *in = fopen(argv[1], "r");
         if (!in) fprintf(stderr, "Invalid read of .wav\n");
 
-        FILE *out = fopen("new.wav", "wb");
+        FILE *out = fopen("same.wav", "wb");
         
         int frame_size = 512;
         int count = 0;
-        short int bits[frame_size];
+        uint8_t bits[frame_size];
         int chunks = 0;
         
         WavHeader * new_header = malloc(sizeof(*new_header));
@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
         
         while (!feof(in)) {
             chunks = fread(bits, 1, frame_size, in);
+            
             count++;
             fwrite(bits, 1, chunks, out);
         }
