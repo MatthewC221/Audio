@@ -3,10 +3,10 @@
 import sys
 sys.path.append('../../software/models/')
 from dftModel import dftAnal, dftSynth
-# import scipy.signal as sci
 from scipy.signal import get_window
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 def suppressFreqDFTmodel(x, fs, N):
     """
@@ -24,6 +24,17 @@ def suppressFreqDFTmodel(x, fs, N):
     w = get_window('hamming', M)
     outputScaleFactor = sum(w)
     
+    # mX = mag spectrum, pX = phase spectrum
+    mX, pX = dftAnal(x, w, N)
     
+    # without the filter
+    y = dftSynth(mX, pX, w.size) * outputScaleFactor
     
-    ## Your code here
+    # https://stackoverflow.com/questions/4364823/how-do-i-obtain-the-frequencies-of-each-value-in-an-fft
+    fil_70 = int(math.ceil(70.0 * N / fs))
+    
+    mX[:fil_70 + 1] = -120
+    
+    yfilt = dftSynth(mX, pX, w.size) * outputScaleFactor
+    
+    return y, yfilt
