@@ -25,7 +25,7 @@ def chirpTracker(inputFile='../../sounds/chirp-150-190-linear.wav'):
            K is the number of frames
     """
     # Analysis parameters: Modify values of the parameters marked XX
-    M = 3100                            # Window size in samples
+    M = 3501                            # Window size in samples
 
     ### Go through the code below and understand it, do not modify anything ###    
     H = 128                                     # Hop size in samples
