@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
-# The only task in this program was to change M until the err is < 2Hz
-# Requires some analysis
+# This exercise just requires changing the value of window and t (threshold)
 
 import numpy as np
 from scipy.signal import get_window
@@ -12,32 +11,31 @@ import utilFunctions as UF
 import sineModel as SM
 import matplotlib.pyplot as plt
 
-def chirpTracker(inputFile='../../sounds/chirp-150-190-linear.wav'):
+def mainlobeTracker(inputFile = '../../sounds/sines-440-602-hRange.wav'):
     """
     Input:
-           inputFile (string) = wav file including the path
+           inputFile (string): wav file including the path
     Output:
-           M (int) = Window length
-           H (int) = hop size in samples
+           window (string): The window type used for analysis
+           t (float) = peak picking threshold (negative dB)
            tStamps (numpy array) = A Kx1 numpy array of time stamps at which the frequency components were estimated
-           fTrackEst (numpy array) = A Kx2 numpy array of estimated frequency values, one row per time frame, one column per component
-           fTrackTrue (numpy array) = A Kx2 numpy array of true frequency values, one row per time frame, one column per component
-           K is the number of frames
-    """
+           fTrackEst = A Kx2 numpy array of estimated frequency values, one row per time frame, one column per component
+           fTrackTrue = A Kx2 numpy array of true frequency values, one row per time frame, one column per component
+    """       
     # Analysis parameters: Modify values of the parameters marked XX
-    M = 3501                            # Window size in samples
-
-    ### Go through the code below and understand it, do not modify anything ###    
-    H = 128                                     # Hop size in samples
-    N = int(pow(2, np.ceil(np.log2(M))))        # FFT Size, power of 2 larger than M
-    t = -80.0                                   # threshold
-    window = 'blackman'                         # Window type
-    maxnSines = 2                               # Maximum number of sinusoids at any time frame
-    minSineDur = 0.0                            # minimum duration set to zero to not do tracking
-    freqDevOffset = 30                          # minimum frequency deviation at 0Hz
-    freqDevSlope = 0.001                        # slope increase of minimum frequency deviation
+    window = 'blackman'                                          # Window type, CHANGE
+    t = -300                                                      # threshold (negative dB), CHANGE
     
-    fs, x = UF.wavread(inputFile)               # read input sound
+    ### Go through the code below and understand it, do not modify anything ###   
+    M = 2047                                             # Window size 
+    N = 4096                                             # FFT Size
+    H = 128                                              # Hop size in samples
+    maxnSines = 2
+    minSineDur = 0.02
+    freqDevOffset = 10
+    freqDevSlope = 0.001
+    # read input sound
+    fs, x = UF.wavread(inputFile)               
     w = get_window(window, M)                   # Compute analysis window
     tStamps = genTimeStamps(x.size, M, fs, H)   # Generate the tStamps to return
     # analyze the sound with the sinusoidal model
@@ -46,21 +44,19 @@ def chirpTracker(inputFile='../../sounds/chirp-150-190-linear.wav'):
     tailF = 20                                 
     # Compute mean estimation error. 20 frames at the beginning and end not used to compute error
     meanErr = np.mean(np.abs(fTrackTrue[tailF:-tailF,:] - fTrackEst[tailF:-tailF,:]),axis=0)     
-    print "Mean estimation error = " + str(meanErr) + ' Hz'      # Print the error to terminal    
+    print "Mean estimation error = " + str(meanErr) + ' Hz'      # Print the error to terminal
     # Plot the estimated and true frequency tracks
     mX, pX = stft.stftAnal(x, w, N, H)
-    maxplotfreq = 1500.0
+    maxplotfreq = 900.0
     binFreq = fs*np.arange(N*maxplotfreq/fs)/N
-    plt.pcolormesh(tStamps, binFreq, np.transpose(mX[:,:N*maxplotfreq/fs+1]),cmap = 'hot_r')
+    plt.pcolormesh(tStamps, binFreq, np.transpose(mX[:,:N*maxplotfreq/fs+1]), cmap='hot_r')
     plt.plot(tStamps,fTrackTrue, 'o-', color = 'c', linewidth=3.0)
     plt.plot(tStamps,fTrackEst, color = 'y', linewidth=2.0)
     plt.legend(('True f1', 'True f2', 'Estimated f1', 'Estimated f2'))
     plt.xlabel('Time (s)')
     plt.ylabel('Frequency (Hz)')
     plt.autoscale(tight=True)
-    plt.show()
-
-    return M, H, tStamps, fTrackEst, fTrackTrue  # Output returned 
+    return window, float(t), tStamps, fTrackEst, fTrackTrue  # Output returned 
 
 ### Do not modify this function
 def genTimeStamps(xlen, M, fs, H):
@@ -76,9 +72,9 @@ def genTimeStamps(xlen, M, fs, H):
 ### Do not modify this function
 def genTrueFreqTracks(tStamps):
     # Generates the true frequency values to compute estimation error
-    # Specifically to chirp-150-190-linear.wav
+    # Specifically to sines-440-602-hRange.wav
     fTrack = np.zeros((len(tStamps),2))
-    fTrack[:,0] = np.transpose(np.linspace(190, 190+1250, len(tStamps)))
-    fTrack[:,1] = np.transpose(np.linspace(150, 150+1250, len(tStamps)))
+    fTrack[:,0] = np.transpose(440*np.ones((len(tStamps),1)))
+    fTrack[:,1] = np.transpose(602*np.ones((len(tStamps),1)))
     return fTrack
-
+    
