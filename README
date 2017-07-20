@@ -14,6 +14,8 @@ Wav_reader, volume_decrease and volume_limit are all very similar
 - Complex_FIR.c = more complex FIR filter (in the works)
 - plotter.py = plots .wav files for visual analysis (requires scipy and matplotlib, use pip for install)
 
+- DFT.c = will turn into a FFT / DFT lib in the future hopefully.
+
 Under course is material from the coursera course on Audio DSP: https://www.coursera.org/learn/audio-signal-processing/
 
 - Weekly assignments
