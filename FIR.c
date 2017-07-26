@@ -41,8 +41,10 @@ int main(int argc, char *argv[])
         
         fread(new_header, 1, sizeof(WavHeader), in);
         printf("Size of header file = %lu\n", sizeof(WavHeader));
-        printf("Sampling rate of header file = %zu\n", new_header->sample_rate);
-        printf("Number of samples in .wav = %zu\n", new_header->subchunk2Size);
+        printf("Sampling rate of header file = %u\n", new_header->sample_rate);
+        printf("Number of samples in .wav = %u\n", new_header->subchunk2Size);
+        printf("Channels = %u\n", new_header->channels);
+        printf("Bits per sample = %u\n", new_header->BPS);
         
         // Slows down the .wav file by two times
         // new_header->sample_rate = new_header->sample_rate * 0.5;
