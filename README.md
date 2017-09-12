@@ -21,5 +21,6 @@ Wav_reader, volume_decrease and volume_limit are all very similar
 
 - Weekly assignments
 
-### Triangle_filters.py: Triangle filters, fs=44100, FFT_size=1024, min_freq=300, max_freq=22050
+### Triangle_filters.py:
+##### fs=44100, FFT_size=1024, min_freq=300, max_freq=22050
 ![Triangle filters, fs=44100, FFT_size=1024, min_freq=300, max_freq=22050](/triangle_filters.png?raw=true "Triangle filters, fs=44100, FFT_size=1024, min_freq=300, max_freq=22050")
