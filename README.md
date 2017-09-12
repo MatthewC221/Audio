@@ -19,3 +19,6 @@ Wav_reader, volume_decrease and volume_limit are all very similar
 Under course is material from the coursera course on Audio DSP: https://www.coursera.org/learn/audio-signal-processing/
 
 - Weekly assignments
+
+Triangle_filters.py:
+![Alt text](triangle_filters.png?raw=true "Triangle filters, fs=44100, FFT_size=1024, min_freq=300, max_freq=22050")
